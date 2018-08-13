@@ -80,10 +80,16 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
 
-    constructor()
+    modifier tweetTextNotEmpty(string _postId) {
+        require(keccak256(abi.encodePacked(getTweetText(_postId))) != keccak256(""));
+        _;
+    }
+
+    constructor(address addr)
     public
     {
         owner = msg.sender;
+        setOracle(addr);
     }
 
     function setOracle(address addr)
@@ -102,6 +108,7 @@ contract BirdBounty is Ownable, Pausable, Destructible {
     whenNotPaused
     amountIsNotZero(_fulfillmentAmount)
     validateNotTooManyBounties
+    tweetTextNotEmpty(_postId)
     returns (uint)
     {
         string memory postText = getTweetText(_postId);
