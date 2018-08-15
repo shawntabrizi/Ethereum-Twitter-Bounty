@@ -74,7 +74,7 @@
     <section class="jumbotron text-center">
       <div class="container">
         <h1 class="jumbotron-heading">Get paid to Tweet!</h1>
-        <p class="lead text-muted">Use this app to prove that you have completed a Bird Bounty by tweeting a specific message.</p>
+        <p class="lead text-muted">"Retweet" someone's message, and claim your reward.</p>
         <h3>Start by submitting a tweet below!</h2>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
@@ -93,29 +93,45 @@
                 </p>
               </blockquote>
 
-              <div>
+              <div id="next-steps">
                 <button type="button" class="btn btn-primary" id="create-bounty-jumbo">Create a bounty</button>
                 <button type="button" class="btn btn-success" id="fulfill-bounty-jumbo">Fulfill a bounty</button>
               </div>
               <br />
-              <div id="create-bounty-input">
+              <div id="create-bounty-input" style="display: none;">
                 <div class="input-group">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Reward</span>
                   </div>
                   <input type="text" class="form-control" id="fulfillment-amount-input" value="10">
                   <div class="input-group-append">
-                      <span class="input-group-text">ETH</span>
+                    <span class="input-group-text">ETH</span>
                   </div>
                   <div class="input-group-prepend">
                     <span class="input-group-text">Deposit</span>
                   </div>
                   <input type="text" class="form-control" id="initial-balance-input" value="1000">
                   <div class="input-group-append">
-                      <span class="input-group-text">ETH</span>
+                    <span class="input-group-text">ETH</span>
                   </div>
                   <div class="input-group-append">
                     <button type="button" class="btn btn-outline-primary" id="submit-bird-bounty">Create</button>
+                  </div>
+                </div>
+              </div>
+              <div id="fulfill-bounty-input" style="display: none;">
+                <div class="input-group">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Bounty ID:</span>
+                  </div>
+                  <select class="custom-select" id="fullfill-bountyid-input">
+                    <option selected>Choose...</option>
+                  </select>
+                  <div class="input-group-prepend">
+                      <span class="input-group-text"></span>
+                    </div>
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-outline-success" id="fulfill-bird-bounty">Claim</button>
                   </div>
                 </div>
               </div>

@@ -46,6 +46,8 @@ App = {
     $("#submit-oracle").click(App.oraclizeTweet);
 
     $("#submit-bird-bounty").click(App.submitBirdBounty);
+    $("#create-bounty-jumbo").click(App.showCreateBountyInput);
+    $("#fulfill-bounty-jumbo").click(App.showFulfillBountyInput);
 
   },
 
@@ -239,6 +241,16 @@ App = {
       App.showErrorMessage("Bad URL.")
     }
 
+  },
+
+  showCreateBountyInput: function () {
+    $("#create-bounty-input").show();
+    $("#fulfill-bounty-input").hide();
+  },
+
+  showFulfillBountyInput: function () {
+    $("#create-bounty-input").hide();
+    $("#fulfill-bounty-input").show();
   }
 
 };
