@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Bird Bounty - A Ethereum Based Twitter Bounty
 ### ConsenSys Academy 2018 Developer Program Final Project - Shawn Tabrizi
 
@@ -70,11 +69,3 @@ For example, the original bounty creator can make a post like:
 Then using the Bird Bounty website and smart contracts, they can have others make the same post, and claim rewards for doing so.
 
 ## How do I create a bounty?
-=======
-# ConsenSys Academy 2018 Developer Program Final Project
-## Shawn Tabrizi
-
-node bridge -a 9 -H 127.0.0.1 -p 7545 --dev
-
-truffle migrate --develop --reset
->>>>>>> ff1683f91d38a6baa6fb0294f813358d009c7cd1
