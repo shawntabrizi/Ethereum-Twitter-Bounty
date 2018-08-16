@@ -23,6 +23,7 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
     1. Use one to initialize the Ganache CLI
 
            ganache-cli
+       Make sure to copy your seed phrases for MetaMask.
     2. Use one to initialize the `ethereum-bridge`
 
            cd /path/to/ethereum-bridge
