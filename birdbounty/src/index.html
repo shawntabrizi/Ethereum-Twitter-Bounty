@@ -96,42 +96,43 @@
               <div id="next-steps">
                 <button type="button" class="btn btn-primary" id="create-bounty-jumbo">Create a bounty</button>
                 <button type="button" class="btn btn-success" id="fulfill-bounty-jumbo">Fulfill a bounty</button>
-              </div>
-              <br />
-              <div id="create-bounty-input" style="display: none;">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Reward</span>
-                  </div>
-                  <input type="text" class="form-control" id="fulfillment-amount-input" value="10">
-                  <div class="input-group-append">
-                    <span class="input-group-text">ETH</span>
-                  </div>
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Deposit</span>
-                  </div>
-                  <input type="text" class="form-control" id="initial-balance-input" value="1000">
-                  <div class="input-group-append">
-                    <span class="input-group-text">ETH</span>
-                  </div>
-                  <div class="input-group-append">
-                    <button type="button" class="btn btn-outline-primary" id="submit-bird-bounty">Create</button>
+
+                <br /><br />
+                <div id="create-bounty-input" style="display: none;">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Reward</span>
+                    </div>
+                    <input type="text" class="form-control" id="fulfillment-amount-input" value="10">
+                    <div class="input-group-append">
+                      <span class="input-group-text">ETH</span>
+                    </div>
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Deposit</span>
+                    </div>
+                    <input type="text" class="form-control" id="initial-balance-input" value="1000">
+                    <div class="input-group-append">
+                      <span class="input-group-text">ETH</span>
+                    </div>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-primary" id="submit-bird-bounty">Create</button>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div id="fulfill-bounty-input" style="display: none;">
-                <div class="input-group">
-                  <div class="input-group-prepend">
-                    <span class="input-group-text">Bounty ID:</span>
-                  </div>
-                  <select class="custom-select" id="fullfill-bountyid-input">
-                    <option selected>Choose...</option>
-                  </select>
-                  <div class="input-group-prepend">
-                      <span class="input-group-text"></span>
+                <div id="fulfill-bounty-input" style="display: none;">
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">Bounty ID:</span>
                     </div>
-                  <div class="input-group-append">
-                    <button type="button" class="btn btn-outline-success" id="fulfill-bird-bounty">Claim</button>
+                    <select class="custom-select" id="fulfill-bountyid-input">
+                      <option selected>Choose...</option>
+                    </select>
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="fulfill-bountyid-message"></span>
+                    </div>
+                    <div class="input-group-append">
+                      <button type="button" class="btn btn-outline-secondary" id="fulfill-bird-bounty" disabled>Claim</button>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -144,44 +145,48 @@
       <div class="container">
 
         <div class="row" id="bountyRow">
-          <div id="bountyTemplate" style="display: none;">
-            <div class="col-md-4 bounty-card">
-              <div class="card mb-4 box-shadow">
-                <div class="card-body">
-                  <blockquote class="quote-card quote-card-small grey-card">
-                    <p class="bounty-text">
-                      Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    </p>
-                  </blockquote>
-                  <h6 class="card-subtitle mb-2 text-muted">
-                    <span>Created by:</span>
-                    <span class="bounty-issuer">bounty issuer</span>
-                  </h6>
-                  <p>
-                    <strong>Fufillment Amount: </strong>
-                    <span class="fulfillment-amount"></span>
-                    <span> ETH</span>
-                  </p>
-                  <p>
-                    <strong>Bounty Balance: </strong>
-                    <span class="bounty-balance"></span>
-                    <span> ETH</span>
-                  </p>
-                  <p>
-                    <strong>Bounty Number: </strong>
-                    <span class="bounty-number"></span>
-                  </p>
-                  <div class="d-flex justify-content-between align-items-center">
-                    <div class="btn-group">
-                      <button type="button" class="btn btn-sm btn-outline-secondary btn-submit" disabled>Submit</button>
-                    </div>
-                  </div>
-                </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <div id="bountyTemplate" style="display: none;">
+      <div class="col-md-4 bounty-card">
+        <div class="card mb-4 box-shadow">
+          <div class="card-body">
+            <blockquote class="quote-card quote-card-small grey-card">
+              <p class="bounty-text">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              </p>
+            </blockquote>
+            <h6 class="card-subtitle mb-2 text-muted">
+              <span>Created by:</span>
+              <span class="bounty-issuer">bounty issuer</span>
+            </h6>
+            <p>
+              <strong>Fufillment Amount: </strong>
+              <span class="fulfillment-amount"></span>
+              <span> ETH</span>
+            </p>
+            <p>
+              <strong>Bounty Balance: </strong>
+              <span class="bounty-balance"></span>
+              <span> ETH</span>
+            </p>
+            <p>
+              <strong>Bounty Number: </strong>
+              <span class="bounty-number"></span>
+            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="btn-group">
+                <button type="button" class="btn btn-sm btn-outline-success btn-contribute" data-id="0">Contribute</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-fulfillment" data-id="0">Edit Fulfillment</button>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-close" data-id="0">Close</button>
               </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
