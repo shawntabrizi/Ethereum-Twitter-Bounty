@@ -73,8 +73,8 @@ contract TwitterOracle is Ownable, Pausable, Destructible, usingOraclize {
     }
 
     function oraclizeTweet(string _postId)
+    public
     payable
-    public 
     whenNotPaused
     {
         // Check if we have enough remaining funds

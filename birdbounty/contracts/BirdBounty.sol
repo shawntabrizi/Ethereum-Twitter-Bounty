@@ -6,7 +6,7 @@ import "installed_contracts/zeppelin/contracts/lifecycle/Destructible.sol";
 
 contract TwitterOracle {
     function getTweetText(string _postId) public view returns(string);
-    function oraclizeTweet(string _postId) payable public;
+    function oraclizeTweet(string _postId) public payable;
 }
 
 contract BirdBounty is Ownable, Pausable, Destructible {
@@ -14,8 +14,7 @@ contract BirdBounty is Ownable, Pausable, Destructible {
     address public owner;
 
     Bounty[] public bounties;
-
-    mapping(uint=>Fulfillment[]) fulfillments;
+    mapping(uint => Fulfillment[]) fulfillments;
 
     TwitterOracle oracleContract;
 
@@ -23,17 +22,16 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         address issuer;
         uint256 fulfillmentAmount;
         uint256 balance;
-        string data;
+        string tweetText;
         bool bountyOpen;
         mapping (bytes32 => bool) tweetsUsed;
     }
 
     struct Fulfillment {
-        bool accepted;
+        uint256 fulfillmentAmount;
         address fulfiller;
-        string data;
+        string tweetId;
     }
-
 
     modifier amountIsNotZero(uint256 _amount) {
         require (_amount != 0);
@@ -57,16 +55,6 @@ contract BirdBounty is Ownable, Pausable, Destructible {
 
     modifier onlyIssuer(uint _bountyId) {
         require(bounties[_bountyId].issuer == msg.sender);
-        _;
-    }
-
-    modifier newFulfillmentAmountIsIncrease(uint _bountyId, uint _newFulfillmentAmount) {
-        require(bounties[_bountyId].fulfillmentAmount < _newFulfillmentAmount);
-        _;
-    }
-
-    modifier fulfillmentNotYetAccepted(uint _bountyId, uint _fulfillmentId) {
-        require(fulfillments[_bountyId][_fulfillmentId].accepted == false);
         _;
     }
     
@@ -132,36 +120,25 @@ contract BirdBounty is Ownable, Pausable, Destructible {
     whenNotPaused
     validateBountyArrayIndex(_bountyId)
     isOpen(_bountyId)
+    enoughFundsToPay(_bountyId)
+    returns (bool)
     {
         string memory postText = getTweetText(_postId);
         require(bounties[_bountyId].tweetsUsed[keccak256(abi.encodePacked(_postId))] != true);
-        require(keccak256(abi.encodePacked(bounties[_bountyId].data)) == keccak256(abi.encodePacked(postText)));
+        require(keccak256(abi.encodePacked(bounties[_bountyId].tweetText)) == keccak256(abi.encodePacked(postText)));
         bounties[_bountyId].tweetsUsed[keccak256(abi.encodePacked(_postId))] = true;
-        fulfillments[_bountyId].push(Fulfillment(false, msg.sender, postText));
-    }
-
-    function acceptFulfillment(uint _bountyId, uint _fulfillmentId)
-    public
-    whenNotPaused
-    validateBountyArrayIndex(_bountyId)
-    validateFulfillmentArrayIndex(_bountyId, _fulfillmentId)
-    isOpen(_bountyId)
-    fulfillmentNotYetAccepted(_bountyId, _fulfillmentId)
-    enoughFundsToPay(_bountyId)
-    {
-        fulfillments[_bountyId][_fulfillmentId].accepted = true;
+        fulfillments[_bountyId].push(Fulfillment(bounties[_bountyId].fulfillmentAmount, msg.sender, _postId));
         bounties[_bountyId].balance -= bounties[_bountyId].fulfillmentAmount;
-        fulfillments[_bountyId][_fulfillmentId].fulfiller.transfer(bounties[_bountyId].fulfillmentAmount);
+        msg.sender.transfer(bounties[_bountyId].fulfillmentAmount);
+        return true;
     }
 
-
-    function increasePayout(uint _bountyId, uint _newFulfillmentAmount)
+    function changePayout(uint _bountyId, uint _newFulfillmentAmount)
     public
     payable
     whenNotPaused
     validateBountyArrayIndex(_bountyId)
     onlyIssuer(_bountyId)
-    newFulfillmentAmountIsIncrease(_bountyId, _newFulfillmentAmount)
     {
         bounties[_bountyId].balance += msg.value;
         require(bounties[_bountyId].balance >= _newFulfillmentAmount);
@@ -192,7 +169,7 @@ contract BirdBounty is Ownable, Pausable, Destructible {
             bounties[_bountyId].issuer,
             bounties[_bountyId].fulfillmentAmount,
             bounties[_bountyId].balance,
-            bounties[_bountyId].data,
+            bounties[_bountyId].tweetText,
             bounties[_bountyId].bountyOpen
         );
     }
@@ -220,6 +197,20 @@ contract BirdBounty is Ownable, Pausable, Destructible {
     returns (uint)
     {
         return fulfillments[_bountyId].length;
+    }
+
+    function getFulfillment(uint _bountyId, uint _fulfillmentId)
+    public
+    view
+    validateBountyArrayIndex(_bountyId)
+    validateFulfillmentArrayIndex(_bountyId, _fulfillmentId)
+    returns (uint256, address, string)
+    {
+        return (
+            fulfillments[_bountyId][_fulfillmentId].fulfillmentAmount,
+            fulfillments[_bountyId][_fulfillmentId].fulfiller,
+            fulfillments[_bountyId][_fulfillmentId].tweetId
+        );
     }
 
     function transitionToState(uint _bountyId, bool _state)
