@@ -82,7 +82,7 @@ contract TwitterOracle is Ownable, Pausable, Destructible, usingOraclize {
         bytes32 postHash = keccak256(abi.encodePacked(queryToPost[_id]));
         tweetTexts[postHash] = _result;
 
-        emit LogTextUpdate(result);
+        emit LogTextUpdate(_result);
     }
 
     /// @notice Returns the balance of this contract
