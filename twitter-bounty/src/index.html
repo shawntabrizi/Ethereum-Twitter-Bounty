@@ -110,14 +110,14 @@
                     <div class="input-group-prepend">
                       <span class="input-group-text">Reward</span>
                     </div>
-                    <input type="text" class="form-control" id="fulfillment-amount-input" value="10">
+                    <input type="text" class="form-control" id="fulfillment-amount-input" value=".1">
                     <div class="input-group-append">
                       <span class="input-group-text">ETH</span>
                     </div>
                     <div class="input-group-prepend">
                       <span class="input-group-text">Deposit</span>
                     </div>
-                    <input type="text" class="form-control" id="initial-balance-input" value="1000">
+                    <input type="text" class="form-control" id="initial-balance-input" value="1">
                     <div class="input-group-append">
                       <span class="input-group-text">ETH</span>
                     </div>
@@ -151,7 +151,7 @@
     <div class="album py-5 bg-light">
       <div class="container">
 
-        <div class="row" id="bountyRow">
+        <div class="card-columns" id="bountyRow">
 
         </div>
 
@@ -159,8 +159,9 @@
     </div>
 
     <div id="bountyTemplate" style="display: none;">
-      <div class="col-lg-4 bounty-card">
+      <div class="bounty-card">
         <div class="card mb-4 box-shadow">
+          <div class="card-header">Bounty #<span class="bounty-number"></span></div>
           <div class="card-body">
             <blockquote class="quote-card quote-card-small grey-card">
               <p class="bounty-text">
@@ -180,10 +181,6 @@
               <strong>Bounty Balance: </strong>
               <span class="bounty-balance"></span>
               <span> ETH</span>
-            </p>
-            <p>
-              <strong>Bounty Number: </strong>
-              <span class="bounty-number"></span>
             </p>
             <div class="d-flex justify-content-between align-items-center">
               <div class="btn-group">

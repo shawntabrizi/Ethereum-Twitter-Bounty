@@ -100,8 +100,8 @@ App = {
 
 
     bountyTemplate.find('.bounty-issuer').text(bountyObject.bountyIssuer);
-    bountyTemplate.find('.fulfillment-amount').text(bountyObject.fulfillmentAmount);
-    bountyTemplate.find('.bounty-balance').text(bountyObject.balance);
+    bountyTemplate.find('.fulfillment-amount').text(web3.fromWei(bountyObject.fulfillmentAmount, 'ether'));
+    bountyTemplate.find('.bounty-balance').text(web3.fromWei(bountyObject.balance, 'ether'));
     bountyTemplate.find('.bounty-number').text(index);
     if (bountyObject.bountyOpen) {
       bountyTemplate.find('.btn-sm').attr('data-id', index)
@@ -217,14 +217,16 @@ App = {
   createTwitterBounty: function (fulfillmentAmount, postId, initialBalance) {
     var twitterBountyInstance;
     console.log(fulfillmentAmount, postId, initialBalance)
+    var initialBalanceWei = web3.toWei(initialBalance, 'ether');
+    var fulfillmentAmountWei = web3.toWei(fulfillmentAmount, 'ether');
     App.contracts.TwitterBounty.deployed().then(function (instance) {
       twitterBountyInstance = instance;
       var bountyId
-      twitterBountyInstance.createBounty.call(fulfillmentAmount, postId, { value: initialBalance })
+      twitterBountyInstance.createBounty.call(fulfillmentAmountWei, postId, { value: initialBalanceWei })
         .then(function (id) {
           bountyId = id;
         }).then(function () {
-          twitterBountyInstance.createBounty(fulfillmentAmount, postId, { value: initialBalance })
+          twitterBountyInstance.createBounty(fulfillmentAmountWei, postId, { value: initialBalanceWei })
             .then(function () {
               bountyId = bountyId.toNumber();
               console.log(bountyId);
@@ -262,10 +264,9 @@ App = {
     $("#fulfill-bountyid-message").empty();
     $("#fulfill-twitter-bounty").prop('disabled', true)
     $("#fulfill-twitter-bounty").removeClass("btn-outline-success").removeClass("btn-outline-danger").addClass("btn-outline-secondary")
-          
+
     $("#fulfill-bountyid-input").append("<option selected>Choose...</option>")
     for (i = App.numOfBounties - 1; i >= 0; i--) {
-      console.log(i)
       $("#fulfill-bountyid-input").append("<option val='" + i + "'>" + i + "</option>");
     }
     $("#create-bounty-input").hide();
