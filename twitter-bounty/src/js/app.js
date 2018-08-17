@@ -175,6 +175,8 @@ App = {
   showOracleTweetText: function (text) {
     $("#tweet-oracle-text").text(text);
     $("#message-output").hide();
+    $("#create-bounty-input").hide();
+    $("#fulfill-bounty-input").hide();
     $("#tweet-output").show();
   },
 
