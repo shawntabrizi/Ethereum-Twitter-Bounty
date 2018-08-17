@@ -1,4 +1,5 @@
-pragma solidity ^0.4.23;
+pragma solidity 0.4.24;
+
 import "installed_contracts/oraclize-api/contracts/usingOraclize.sol";
 import "installed_contracts/zeppelin/contracts/ownership/Ownable.sol";
 import "installed_contracts/zeppelin/contracts/lifecycle/Pausable.sol";
