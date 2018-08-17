@@ -24,13 +24,13 @@ contract TwitterOracle {
 /// @author Shawn Tabrizi
 /// @notice This contract follows many similar patterns to Bounties Network's StandardBounties.sol
 contract BirdBounty is Ownable, Pausable, Destructible {
-    /// Storage
+    /* Storage */
     address public owner;
     Bounty[] public bounties;
     mapping(uint => Fulfillment[]) fulfillments;
     TwitterOracle oracleContract;
 
-    /// Structs
+    /* Structs */
     struct Bounty {
         address issuer;
         uint256 fulfillmentAmount;
@@ -46,7 +46,10 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         string tweetId;
     }
 
-    /// Modifiers
+    /* Modifiers */
+    /// @notice Checks that the amount is not equal to zero
+    /// @dev To be used in situations like funding a bounty and setting the bounty fulfillment reward
+    /// @param _amount The amount to be checked
     modifier amountIsNotZero(uint256 _amount) {
         require (
             _amount != 0,
@@ -55,6 +58,8 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
 
+    /// @notice Checks that the bounty array won't overflow
+    /// @dev To be used before a new bounty is created
     modifier validateNotTooManyBounties() {
         require(
             (bounties.length + 1) > bounties.length,
@@ -62,7 +67,21 @@ contract BirdBounty is Ownable, Pausable, Destructible {
             );
         _;
     }
+    
+    /// @notice Checks that the number of fulfillments won't overflow for a specific bounty
+    /// @dev To be used before a new fulfillment is created for a bounty
+    /// @param _bountyId The bounty to check fulfillments for
+    modifier validateNotTooManyFulfillments(uint _bountyId){
+        require(
+            (fulfillments[_bountyId].length + 1) > fulfillments[_bountyId].length,
+            "There are too many fulfillments for this bounty, causing an overflow."
+            );
+        _;
+    }
 
+    /// @notice Checks that a specific Bounty ID is within the range of registered bounties
+    /// @dev To be used in any situation where we are accessing an existing bounty
+    /// @param _bountyId The Bounty ID to validate
     modifier validateBountyArrayIndex(uint _bountyId){
         require(
             _bountyId < bounties.length,
@@ -71,6 +90,9 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
 
+    /// @notice Checks that a specific Bounty ID is open
+    /// @dev To be used in any situation where a bounty is being modified or fulfilled
+    /// @param _bountyId The Bounty ID to check if open
     modifier isOpen(uint _bountyId) {
         require(
             bounties[_bountyId].bountyOpen == true,
@@ -79,6 +101,9 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
 
+    /// @notice Checks that the the function is being called by the owner of the bounty
+    /// @dev To be used in any situation where the function performs a privledged action to the bounty
+    /// @param _bountyId The Bounty ID to check the owner of
     modifier onlyIssuer(uint _bountyId) {
         require(
             bounties[_bountyId].issuer == msg.sender,
@@ -87,6 +112,9 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
     
+    /// @notice Checks that the bounty has enough of a balance to pay a fulfillment
+    /// @dev To be used before a fulfillment is completed
+    /// @param _bountyId The Bounty ID to check the balance of
     modifier enoughFundsToPay(uint _bountyId) {
         require(
             bounties[_bountyId].balance >= bounties[_bountyId].fulfillmentAmount,
@@ -95,6 +123,10 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
 
+    /// @notice Checks that a specific Fulfillment ID is within the range of fullfillments for a bounty
+    /// @dev To be used in any situation where we are accessing a fulfillment
+    /// @param _bountyId The Bounty ID which has the fulfillment to be checked
+    /// @param _index The index of the fulfillment to be checked
     modifier validateFulfillmentArrayIndex(uint _bountyId, uint _index) {
         require(
             _index < fulfillments[_bountyId].length,
@@ -103,6 +135,9 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
 
+    /// @notice Check that the text for a tweet is not empty
+    /// @dev An empty tweet text implies that the tweet was not oraclized, or failed to oraclize
+    /// @param _postId The tweet id to check. Expecting "<user>/status/<id>"
     modifier tweetTextNotEmpty(string _postId) {
         require(
             keccak256(abi.encodePacked(getTweetText(_postId))) != keccak256(""),
@@ -111,14 +146,7 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         _;
     }
 
-    modifier transferredAmountEqualsValue(uint _bountyId, uint _amount) {
-        require(
-            (_amount * 1 wei) == msg.value,
-            "The amount of ETH sent does not match the value indicated."
-            );
-        _;
-    }
-
+    /* Functions */
     /// @notice Constructor function which establishes the contract owner and initializes the Twitter Oracle address
     /// @dev Ownership can be managed through Open-Zeppelin's Ownable.sol which this contract uses. Oracle address can be updated using SetOracle
     /// @param _addr The address of the Twitter Oracle contract
@@ -127,6 +155,14 @@ contract BirdBounty is Ownable, Pausable, Destructible {
     {
         owner = msg.sender;
         setOracle(_addr);
+    }
+
+    /// @notice The fallback function for the contract
+    /// @dev Will simply revert any unexpected calls
+    function()
+    public
+    {
+        revert("Fallback function. Reverting...");
     }
 
     /// @notice Allows the contract to update the Twitter Oracle it uses for creating bounties
@@ -162,7 +198,7 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         return (bounties.length - 1);
     }
 
-    /// @notice A function that allows anyone to add additional funds to an open bounty
+    /// @notice This function allows anyone to add additional funds to an open bounty
     /// @dev Note that these funds are under full control of the bounty creator, and the bounty can be closed and drained at any time
     /// @param _bountyId The bounty that the user wants to contribute to
     /// @param _value The amount that the user wants to contribute. Must match msg.value to make sure funds aren't accidentally deposited.
@@ -173,15 +209,20 @@ contract BirdBounty is Ownable, Pausable, Destructible {
     validateBountyArrayIndex(_bountyId)
     isOpen(_bountyId)
     amountIsNotZero(_value)
-    transferredAmountEqualsValue(_bountyId, _amount)
     {
         bounties[_bountyId].balance += msg.value;
     }
 
+    /// @notice This function allows any user to fulfill an open bounty using a post saved to the Twitter Oracle contract, and will automatically pay out
+    /// @dev This function only works if there are enough funds to pay someone and if the bounty is open.
+    /// @param _bountyId The bounty that the user is trying to fulfill
+    /// @param _postId The Twitter post that will be used to try and fulfill the bounty
+    /// @return Returns true if fulfillment completes. Can be used to check the function before it is actually run using .call()
     function fulfillBounty(uint _bountyId, string _postId)
     public
     whenNotPaused
     validateBountyArrayIndex(_bountyId)
+    validateNotTooManyFulfillments(_bountyId)
     isOpen(_bountyId)
     enoughFundsToPay(_bountyId)
     returns (bool)
@@ -202,18 +243,29 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         return true;
     }
 
+    /// @notice This function allows the owner of a bounty to change the fulfillment amount for that bounty
+    /// @dev This function requires that the new fulfillment amount is less than available balance for the bounty, which is why this function is also payable
+    /// @param _bountyId The bounty the owner is trying to changet the fulfillment amount for
+    /// @param _newFulfillmentAmount The new amount that users who fulfill the bounty will be paid 
     function changePayout(uint _bountyId, uint _newFulfillmentAmount)
     public
     payable
     whenNotPaused
     validateBountyArrayIndex(_bountyId)
     onlyIssuer(_bountyId)
+    isOpen(_bountyId)
     {
         bounties[_bountyId].balance += msg.value;
-        require(bounties[_bountyId].balance >= _newFulfillmentAmount);
+        require(
+            bounties[_bountyId].balance >= _newFulfillmentAmount,
+            "Make sure"
+            );
         bounties[_bountyId].fulfillmentAmount = _newFulfillmentAmount;
     }
 
+    /// @notice This function allows the owner of a bounty to close that bounty, and drain all funds from the bounty
+    /// @dev Only the bounty creator can call this function
+    /// @param _bountyId The bounty the owner wants to close
     function closeBounty(uint _bountyId)
     public
     whenNotPaused
@@ -228,6 +280,10 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         }
     }
 
+    /// @notice Returns the details of a bounty
+    /// @dev It does not include the mapping of tweets used to fulfill the bounty
+    /// @param _bountyId The bounty that should be retrieved
+    /// @return A tuple of the bounty details
     function getBounty(uint _bountyId)
     public
     view
@@ -243,6 +299,11 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         );
     }
 
+    /// @notice Checks if a specific Tweet has already been used for a bounty
+    /// @dev Can be used to proactively check for problems before the user submits a transaction
+    /// @param _bountyId The bounty to check for tweets used
+    /// @param _postId The twitter post to check if it was already used
+    /// @return Returns true if the post has been used, otherwise it returns false
     function checkBountyTweetsUsed(uint _bountyId, string _postId)
     public
     view
@@ -252,6 +313,9 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         return (bounties[_bountyId].tweetsUsed[keccak256(abi.encodePacked(_postId))]);
     }
 
+    /// @notice Returns the number of bounties registered in the contract
+    /// @dev Can be used to iterate over all the bounties in the contract
+    /// @return Returns the number of bounties
     function getNumBounties()
     public
     view
@@ -260,6 +324,10 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         return bounties.length;
     }
 
+    /// @notice Returns the number of fulfillments completed for a bounty
+    /// @dev Can be used to iterate over all the fulfillments for a bounty
+    /// @param _bountyId The bounty to get the number of fulfillments for
+    /// @return Returns the number of fulfillments for a bounty
     function getNumFulfillments(uint _bountyId)
     public
     view
@@ -268,6 +336,10 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         return fulfillments[_bountyId].length;
     }
 
+    /// @notice Gets the fulfillment details for a specific bounty and fulfillment
+    /// @param _bountyId The bounty which has the fulfillment to be returned
+    /// @param _fulfillmentId The fulfillment to be returned
+    /// @return Returns a tuple of details for the fulfillment
     function getFulfillment(uint _bountyId, uint _fulfillmentId)
     public
     view
@@ -282,13 +354,11 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         );
     }
 
-    function transitionToState(uint _bountyId, bool _state)
-    internal
-    whenNotPaused
-    {
-        bounties[_bountyId].bountyOpen = _state;
-    }
-
+    /* Twitter Oracle Functions */
+    /// @notice Gets the tweet text for a twitter post from the Twitter Oracle
+    /// @dev Simply a passthrough function for the Twitter Oracle contract
+    /// @param _postId The twitter post to get the text for
+    /// @return Returns text for the twitter post, or in the case where the post hasn't been stored yet, it will return an empty string
     function getTweetText(string _postId)
     public
     view
@@ -297,6 +367,9 @@ contract BirdBounty is Ownable, Pausable, Destructible {
         return oracleContract.getTweetText(_postId);
     }
 
+    /// @notice Requests the Twitter Oracle contract to retrieve and store the tweet text for a Twitter post
+    /// @dev The Twitter Oracle contract requires funds to support storing the Oraclize callback, which is why this function is Payable, and will forward funds to the Twitter Oracle
+    /// @param _postId The twitter post to retrieve and store in the Twitter Oracle contract
     function oraclizeTweet(string _postId)
     public
     payable
