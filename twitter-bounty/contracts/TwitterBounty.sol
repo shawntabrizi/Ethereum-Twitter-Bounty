@@ -201,14 +201,12 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
     /// @notice This function allows anyone to add additional funds to an open bounty
     /// @dev Note that these funds are under full control of the bounty creator, and the bounty can be closed and drained at any time
     /// @param _bountyId The bounty that the user wants to contribute to
-    /// @param _value The amount that the user wants to contribute. Must match msg.value to make sure funds aren't accidentally deposited.
-    function contribute (uint _bountyId, uint _value)
+    function contribute (uint _bountyId)
     public
     payable
     whenNotPaused
     validateBountyArrayIndex(_bountyId)
     isOpen(_bountyId)
-    amountIsNotZero(_value)
     {
         bounties[_bountyId].balance += msg.value;
     }

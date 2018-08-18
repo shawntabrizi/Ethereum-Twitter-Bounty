@@ -36,33 +36,44 @@ App = {
 
       // Use our contract to retrieve and mark the adopted pets
       return App.showBounties();
+    }).then(function() {
+      return App.bindEvents();
     });
 
-    return App.bindEvents();
+    
   },
 
   bindEvents: function () {
-
     $("#submit-oracle").click(App.oraclizeTweet);
-
     $("#submit-twitter-bounty").click(App.submitTwitterBounty);
     $("#create-bounty-jumbo").click(App.showCreateBountyInput);
     $("#fulfill-bounty-jumbo").click(App.showFulfillBountyInput);
     $("#fulfill-bountyid-input").change(App.checkBountyFulfill);
     $("#fulfill-twitter-bounty").click(App.claimBounty);
-
+    $(document).on('click', '.btn-close', (function () {
+      var id = $(this).data('id');
+      App.closeBounty(id);
+    }));
+    $(document).on('click', '.btn-contribute', (function () {
+      var id = $(this).data('id');
+      App.contributeToBounty(id);
+    }));
+    $(document).on('click', '.btn-fulfillment', (function () {
+      var id = $(this).data('id');
+      App.editBountyFulfillment(id);
+    }));
   },
 
   showErrorMessage: function (message) {
     $("#message-output").text(message);
     $("#message-output").addClass('alert-danger').removeClass('alert-secondary');
-    $("#message-output").show();
+    $("#message-output-container").collapse('show');
   },
 
   showNormalMessage: function (message) {
     $("#message-output").text(message);
     $("#message-output").removeClass('alert-danger').addClass('alert-secondary');
-    $("#message-output").show();
+    $("#message-output-container").collapse('show');
   },
 
   getNumOfBounties: function () {
@@ -90,7 +101,7 @@ App = {
 
   showBounty: function (bountyObject, index) {
     var bountyRow = $('#bountyRow');
-    var bountyTemplate = $('#bountyTemplate').clone();
+    var bountyTemplate = $('#bountyTemplate').clone(true, true);
 
     try {
       bountyTemplate.find('.bounty-text').text(JSON.parse(bountyObject.data).join(""));
@@ -104,12 +115,14 @@ App = {
     bountyTemplate.find('.bounty-balance').text(web3.fromWei(bountyObject.balance, 'ether'));
     bountyTemplate.find('.bounty-number').text(index);
     if (bountyObject.bountyOpen) {
-      bountyTemplate.find('.btn-sm').attr('data-id', index)
+      bountyTemplate.find('*').attr('data-id', index);
       if (bountyObject.bountyIssuer != web3.eth.accounts[0]) {
         bountyTemplate.find('.btn-fulfillment').remove();
         bountyTemplate.find('.btn-close').remove();
       }
     } else {
+      bountyTemplate.find('.fulfillment-amount-group').hide();
+      bountyTemplate.find('.bounty-balance-group').hide();
       bountyTemplate.find('.btn-group').empty();
       bountyTemplate.find('.btn-group').append("<div class='btn btn-sm btn-outline-danger'>Bounty Closed</button>")
     }
@@ -146,7 +159,6 @@ App = {
 
   oraclizeTweet: function () {
     var twitterBountyInstance;
-    $("#tweet-output").hide();
     var tweetUrl = $('#twitter-url').val();
 
     if (tweetUrl.includes("https://twitter.com/")) {
@@ -158,6 +170,7 @@ App = {
 
       }).then(function (result) {
         if (result == "") {
+          $("#tweet-output").collapse('hide');
           return twitterBountyInstance.oraclizeTweet(tweetId);
         } else {
           App.showOracleTweetText(result);
@@ -174,10 +187,10 @@ App = {
 
   showOracleTweetText: function (text) {
     $("#tweet-oracle-text").text(text);
-    $("#message-output").hide();
-    $("#create-bounty-input").hide();
-    $("#fulfill-bounty-input").hide();
-    $("#tweet-output").show();
+    $("#message-output-container").collapse('hide');
+    $("#create-bounty-input").collapse('hide');
+    $("#fulfill-bounty-input").collapse('hide')
+    $("#tweet-output").collapse('show');
   },
 
   checkOracle: function (count) {
@@ -255,8 +268,8 @@ App = {
   },
 
   showCreateBountyInput: function () {
-    $("#create-bounty-input").show();
-    $("#fulfill-bounty-input").hide();
+    $("#create-bounty-input").collapse('show');
+    $("#fulfill-bounty-input").collapse('hide');
   },
 
   showFulfillBountyInput: function () {
@@ -269,8 +282,8 @@ App = {
     for (i = App.numOfBounties - 1; i >= 0; i--) {
       $("#fulfill-bountyid-input").append("<option val='" + i + "'>" + i + "</option>");
     }
-    $("#create-bounty-input").hide();
-    $("#fulfill-bounty-input").show();
+    $("#create-bounty-input").collapse('hide');
+    $("#fulfill-bounty-input").collapse('show');
   },
 
   checkBountyFulfill: function () {
@@ -325,6 +338,55 @@ App = {
         );
       });
     }
+  },
+
+  closeBounty: function (id) {
+    var twitterBountyInstance;
+    App.contracts.TwitterBounty.deployed().then(function (instance) {
+      twitterBountyInstance = instance;
+
+      return instance.closeBounty(id)
+    });
+  },
+
+  contributeToBounty: function (id) {
+    $(".modify-bounty-container[data-id='" + id +"']").collapse('show')
+    $(".modify-bounty-button[data-id='" + id +"']").text("Contribute")
+    $(".modify-bounty-button[data-id='" + id +"']").addClass('btn-outline-success').removeClass('btn-outline-secondary')
+
+    $(".modify-bounty-button[data-id='" + id +"']").unbind()
+    $(".modify-bounty-button[data-id='" + id +"']").click( function () {
+      var twitterBountyInstance;
+      console.log("Contribute" + id)
+      var amount = $(".modify-bounty-input[data-id='" + id +"']").val();
+      console.log(amount);
+      var amountWei = web3.toWei(amount, 'ether');
+      App.contracts.TwitterBounty.deployed().then(function (instance) {
+        twitterBountyInstance = instance;
+
+        return instance.contribute(id, {value: amountWei});
+      });
+    });
+  },
+  
+  editBountyFulfillment: function (id) {
+    $(".modify-bounty-container[data-id='" + id +"']").collapse('show')
+    $(".modify-bounty-button[data-id='" + id +"']").text("Edit")
+    $(".modify-bounty-button[data-id='" + id +"']").removeClass('btn-outline-success').addClass('btn-outline-secondary')
+
+    $(".modify-bounty-button[data-id='" + id +"']").unbind()
+    $(".modify-bounty-button[data-id='" + id +"']").click( function () {
+      var twitterBountyInstance;
+      console.log("Contribute" + id)
+      var amount = $(".modify-bounty-input[data-id='" + id +"']").val();
+      console.log(amount);
+      var amountWei = web3.toWei(amount, 'ether');
+      App.contracts.TwitterBounty.deployed().then(function (instance) {
+        twitterBountyInstance = instance;
+
+        return instance.changePayout(id, amountWei);
+      });
+    });
   }
 
 };

@@ -92,8 +92,10 @@
             </div>
           </div>
           <div id="output-container">
-            <div class="alert alert-secondary" id="message-output" style="display: none;"></div>
-            <div id="tweet-output" style="display: none;">
+            <div id="message-output-container" class="collapse">
+              <div class="alert alert-secondary" id="message-output"></div>
+            </div>
+            <div id="tweet-output" class="collapse">
               <blockquote class="quote-card grey-card">
                 <p id="tweet-oracle-text">
                 </p>
@@ -105,7 +107,7 @@
 
                 <br />
                 <br />
-                <div id="create-bounty-input" style="display: none;">
+                <div id="create-bounty-input" class="collapse">
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">Reward</span>
@@ -126,7 +128,7 @@
                     </div>
                   </div>
                 </div>
-                <div id="fulfill-bounty-input" style="display: none;">
+                <div id="fulfill-bounty-input" class="collapse">
                   <div class="input-group">
                     <div class="input-group-prepend">
                       <span class="input-group-text">Bounty ID:</span>
@@ -161,7 +163,9 @@
     <div id="bountyTemplate" style="display: none;">
       <div class="bounty-card">
         <div class="card mb-4 box-shadow">
-          <div class="card-header">Bounty #<span class="bounty-number"></span></div>
+          <div class="card-header">Bounty #
+            <span class="bounty-number"></span>
+          </div>
           <div class="card-body">
             <blockquote class="quote-card quote-card-small grey-card">
               <p class="bounty-text">
@@ -172,21 +176,31 @@
               <span>Created by:</span>
               <span class="bounty-issuer">bounty issuer</span>
             </h6>
-            <p>
+            <p class="fulfillment-amount-group">
               <strong>Fufillment Amount: </strong>
               <span class="fulfillment-amount"></span>
               <span> ETH</span>
             </p>
-            <p>
+            <p class="bounty-balance-group">
               <strong>Bounty Balance: </strong>
               <span class="bounty-balance"></span>
               <span> ETH</span>
             </p>
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="text-center">
               <div class="btn-group">
-                <button type="button" class="btn btn-sm btn-outline-success btn-contribute" data-id="0">Contribute</button>
-                <button type="button" class="btn btn-sm btn-outline-secondary btn-fulfillment" data-id="0">Edit Fulfillment</button>
-                <button type="button" class="btn btn-sm btn-outline-danger btn-close" data-id="0">Close</button>
+                <button type="button" class="btn btn-sm btn-outline-success btn-contribute" data-id="-1">Contribute</button>
+                <button type="button" class="btn btn-sm btn-outline-secondary btn-fulfillment" data-id="-1">Edit Fulfillment</button>
+                <button type="button" class="btn btn-sm btn-outline-danger btn-close" data-id="-1">Close</button>
+              </div>
+              <div class="collapse modify-bounty-container" data-id="-1">
+                <br />
+                <div class="input-group">
+                  <input type="text" class="form-control modify-bounty-input" value=".1" data-id="-1">
+                  <div class="input-group-append">
+                    <span class="input-group-text">ETH</span>
+                    <button type="button" class="btn btn-outline-secondary modify-bounty-button" data-id="-1">></button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
