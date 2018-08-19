@@ -31,20 +31,20 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            node bridge -a 9 -H 127.0.0.1 -p 8545 --dev
     3. Use one to `migrate` the contracts using Truffle. You might need to run these in PowerShell rather than CMD.
 
-           cd /path/to/twitterbounty
+           cd /path/to/twitter-bounty
            truffle compile
            truffle migrate --develop --reset
 
     4. Finally, use one to start the `lite-server`
 
-           cd /path/to/twitterbounty
+           cd /path/to/twitter-bounty
            npm run dev
 
 4. Your browser should automatically open up the Twitter Bounty webpage. To interact, make sure you have [installed and configured MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask).
 
 ## How does it work?
 
-![Twitter Bounty Architecture](./twitterbounty/src/img/twitter-bounty-architecture.png)
+![Twitter Bounty Architecture](./twitter-bounty/src/img/twitter-bounty-architecture.png)
 
 Twitter Bounty is broken up into two Ethereum smart contracts:
 
@@ -74,6 +74,10 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
 ## Developer Details
 
 ### Truffle Tests
+    cd /path/to/twitter-bounty
+    truffle test
+
+    <break>
 
     Contract: TwitterOracle.sol
         Testing functionality of the Twitter Oracle Contract
