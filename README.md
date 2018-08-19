@@ -77,7 +77,7 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
     cd /path/to/twitter-bounty
     truffle test
 
-    <break>
+<break>
 
     Contract: TwitterOracle.sol
         Testing functionality of the Twitter Oracle Contract
