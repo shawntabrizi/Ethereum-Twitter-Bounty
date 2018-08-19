@@ -46,6 +46,13 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
         string tweetId;
     }
 
+    /* Events */
+    event BountyCreated(uint _bountyId);
+    event BountyFulfilled(uint _bountyId, address indexed _fulfiller, uint256 indexed _fulfillmentId);
+    event BountyClosed(uint _bountyId, address indexed _issuer);
+    event ContributionAdded(uint _bountyId, address indexed _contributor, uint256 _value);
+    event PayoutChanged(uint _bountyId, uint _newFulfillmentAmount);
+
     /* Modifiers */
     /// @notice Checks that the amount is not equal to zero
     /// @dev To be used in situations like funding a bounty and setting the bounty fulfillment reward
@@ -195,6 +202,7 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
         string memory postText = getTweetText(_postId);
         bounties.push(Bounty(msg.sender, _fulfillmentAmount, msg.value, postText, true));
         bounties[bounties.length - 1].tweetsUsed[keccak256(abi.encodePacked(_postId))] = true;
+        emit BountyCreated(bounties.length - 1);
         return (bounties.length - 1);
     }
 
@@ -209,6 +217,7 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
     isOpen(_bountyId)
     {
         bounties[_bountyId].balance += msg.value;
+        emit ContributionAdded(_bountyId, msg.sender, msg.value);
     }
 
     /// @notice This function allows any user to fulfill an open bounty using a post saved to the Twitter Oracle contract, and will automatically pay out
@@ -238,6 +247,7 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
         fulfillments[_bountyId].push(Fulfillment(bounties[_bountyId].fulfillmentAmount, msg.sender, _postId));
         bounties[_bountyId].balance -= bounties[_bountyId].fulfillmentAmount;
         msg.sender.transfer(bounties[_bountyId].fulfillmentAmount);
+        emit BountyFulfilled(_bountyId, msg.sender, (fulfillments[_bountyId].length - 1));
         return true;
     }
 
@@ -256,9 +266,10 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
         bounties[_bountyId].balance += msg.value;
         require(
             bounties[_bountyId].balance >= _newFulfillmentAmount,
-            "Make sure"
+            "Make sure the fulfillment amount is not more than the current bounty balance."
             );
         bounties[_bountyId].fulfillmentAmount = _newFulfillmentAmount;
+        emit PayoutChanged(_bountyId, _newFulfillmentAmount);
     }
 
     /// @notice This function allows the owner of a bounty to close that bounty, and drain all funds from the bounty
@@ -276,6 +287,7 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
         if (tempBalance > 0) {
             bounties[_bountyId].issuer.transfer(tempBalance);
         }
+        emit BountyClosed(_bountyId, msg.sender);
     }
 
     /// @notice Returns the details of a bounty
