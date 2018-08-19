@@ -28,7 +28,7 @@ contract TwitterBounty is Ownable, Pausable, Destructible {
     address public owner;
     Bounty[] public bounties;
     mapping(uint => Fulfillment[]) fulfillments;
-    TwitterOracle oracleContract;
+    TwitterOracle public oracleContract;
 
     /* Structs */
     struct Bounty {

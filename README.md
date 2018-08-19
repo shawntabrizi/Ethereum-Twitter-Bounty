@@ -29,7 +29,7 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            cd /path/to/ethereum-bridge
            npm install
            node bridge -a 9 -H 127.0.0.1 -p 8545 --dev
-    3. Use one to `migrate` the contracts using Truffle
+    3. Use one to `migrate` the contracts using Truffle. You might need to run these in PowerShell rather than CMD.
 
            cd /path/to/twitterbounty
            truffle compile
@@ -70,3 +70,46 @@ For example, the original bounty creator can make a post like:
 Then using the Twitter Bounty website and smart contracts, they can have others make the same post, and claim rewards for doing so.
 
 ## How do I create a bounty?
+
+## Developer Details
+
+### Truffle Tests
+
+    Contract: TwitterOracle.sol
+        Testing functionality of the Twitter Oracle Contract
+        √ Contract should be owned by contract creator (account[9])
+        √ Should have logged a new Oraclize query (1132ms)
+        √ Callback should have logged an update event (7561ms)
+        √ Text should be stored from twitter post
+        √ Text should match what is expected from twitter
+        √ Contract should be pauseable (779ms)
+        √ Contract should not work when paused (62ms)
+        √ Contract should be destructible (594ms)
+
+    Contract: TwitterBounty.sol
+        Testing functionality of the Twitter Bounty Contract (requires TwitterOracle)
+        √ Contract should be owned by contract creator (account[0]) (63ms)
+        √ Contract should be connected to Twitter Oracle
+        √ [1] Contract should be able to oraclize tweet through Twitter Oracle (1658ms)
+        √ [1] Twitter Oracle should have logged an update event for tweet (7657ms)
+        √ [1] Text should match what is expected from twitter (62ms)
+        √ [2] Contract should be able to oraclize tweet through Twitter Oracle (1459ms)
+        √ [2] Twitter Oracle should have logged an update event for tweet (7642ms)
+        √ [2] Text should match what is expected from twitter (38ms)
+        √ [3] Contract should be able to oraclize tweet through Twitter Oracle (1529ms)
+        √ [3] Twitter Oracle should have logged an update event for tweet (7104ms)
+        √ [3] Text should match what is expected from twitter
+        √ Contract should be able to create bounties (117ms)
+        √ Any user should be able to contribute to bounty (81ms)
+        √ Bounty should reject an already used tweet (38ms)
+        √ Bounty should reject a mismatched tweet
+        √ Bounty should accept a different, yet matching tweet (64ms)
+        √ Bounty should pay out when fulfilled (142ms)
+        √ Bounty cannot be modified by non-owner (48ms)
+        √ Bounty can be closed by owner (67ms)
+        √ Contract should be pauseable (871ms)
+        √ Contract should not work when paused (87ms)
+        √ Contract should be destructible (581ms)
+
+
+    30 passing (40s)

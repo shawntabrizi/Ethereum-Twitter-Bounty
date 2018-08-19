@@ -21,6 +21,8 @@ App = {
     }
     web3 = new Web3(App.web3Provider);
 
+    $("#current-account-address").text(web3.eth.accounts[0]);
+
     return App.initContract();
   },
 

@@ -10,7 +10,7 @@ import "installed_contracts/zeppelin/contracts/lifecycle/Destructible.sol";
 /// @notice This contract uses Oraclize to retrieve post text from Twitter, and store it in this contract
 contract TwitterOracle is Ownable, Pausable, Destructible, usingOraclize {
     /* Storage */
-    address owner;
+    address public owner;
     mapping(bytes32 => string) public tweetTexts;
     mapping(bytes32 => string) internal queryToPost;
 
