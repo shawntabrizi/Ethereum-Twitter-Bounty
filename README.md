@@ -117,7 +117,7 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
     cd /path/to/twitter-bounty
     truffle test
 
-> Note that [these tests](./twitter-bounty/test) are all written in JavaScript due to the fact that these contracts are strongly dependent on the Oracle.
+> Note that [these tests](./twitter-bounty/test) are all written in JavaScript due to the fact that these contracts are strongly dependent on the asynchronous Oraclize process.
 
 <break>
 
