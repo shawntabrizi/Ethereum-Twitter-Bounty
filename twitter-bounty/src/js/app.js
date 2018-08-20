@@ -4,20 +4,16 @@ App = {
   numOfBounties: 0,
 
   init: function () {
-
-
-
     return App.initWeb3();
   },
 
   initWeb3: function () {
-
     // Is there an injected web3 instance?
     if (typeof web3 !== 'undefined') {
       App.web3Provider = web3.currentProvider;
     } else {
       // If no injected web3 instance is detected, fall back to Ganache
-      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:7545');
+      App.web3Provider = new Web3.providers.HttpProvider('http://localhost:8545');
     }
     web3 = new Web3(App.web3Provider);
 
@@ -38,11 +34,11 @@ App = {
 
       // Use our contract to retrieve and mark the adopted pets
       return App.showBounties();
-    }).then(function() {
+    }).then(function () {
       return App.bindEvents();
     });
 
-    
+
   },
 
   bindEvents: function () {
@@ -139,15 +135,20 @@ App = {
 
     App.getNumOfBounties().then(function () {
       App.contracts.TwitterBounty.deployed().then(function (instance) {
-        var promises = [];
+        if (App.numOfBounties == 0) {
+          console.log("No Bounties")
+          $("#bountyRow").text("No bounties have been created yet!");
+        } else {
+          var promises = [];
 
-        twitterBountyInstance = instance;
-        for (i = 0; i < App.numOfBounties; i++) {
-          promises.push(i);
-          promises.push(twitterBountyInstance.getBounty(i))
+          twitterBountyInstance = instance;
+          for (i = 0; i < App.numOfBounties; i++) {
+            promises.push(i);
+            promises.push(twitterBountyInstance.getBounty(i))
+          }
+
+          return promises;
         }
-
-        return promises;
       }).then(function (promises) {
         Promise.all(promises).then(function (result) {
           for (i = 0; i < result.length; i += 2) {
@@ -352,35 +353,35 @@ App = {
   },
 
   contributeToBounty: function (id) {
-    $(".modify-bounty-container[data-id='" + id +"']").collapse('show')
-    $(".modify-bounty-button[data-id='" + id +"']").text("Contribute")
-    $(".modify-bounty-button[data-id='" + id +"']").addClass('btn-outline-success').removeClass('btn-outline-secondary')
+    $(".modify-bounty-container[data-id='" + id + "']").collapse('show')
+    $(".modify-bounty-button[data-id='" + id + "']").text("Contribute")
+    $(".modify-bounty-button[data-id='" + id + "']").addClass('btn-outline-success').removeClass('btn-outline-secondary')
 
-    $(".modify-bounty-button[data-id='" + id +"']").unbind()
-    $(".modify-bounty-button[data-id='" + id +"']").click( function () {
+    $(".modify-bounty-button[data-id='" + id + "']").unbind()
+    $(".modify-bounty-button[data-id='" + id + "']").click(function () {
       var twitterBountyInstance;
       console.log("Contribute" + id)
-      var amount = $(".modify-bounty-input[data-id='" + id +"']").val();
+      var amount = $(".modify-bounty-input[data-id='" + id + "']").val();
       console.log(amount);
       var amountWei = web3.toWei(amount, 'ether');
       App.contracts.TwitterBounty.deployed().then(function (instance) {
         twitterBountyInstance = instance;
 
-        return instance.contribute(id, {value: amountWei});
+        return instance.contribute(id, { value: amountWei });
       });
     });
   },
-  
-  editBountyFulfillment: function (id) {
-    $(".modify-bounty-container[data-id='" + id +"']").collapse('show')
-    $(".modify-bounty-button[data-id='" + id +"']").text("Edit")
-    $(".modify-bounty-button[data-id='" + id +"']").removeClass('btn-outline-success').addClass('btn-outline-secondary')
 
-    $(".modify-bounty-button[data-id='" + id +"']").unbind()
-    $(".modify-bounty-button[data-id='" + id +"']").click( function () {
+  editBountyFulfillment: function (id) {
+    $(".modify-bounty-container[data-id='" + id + "']").collapse('show')
+    $(".modify-bounty-button[data-id='" + id + "']").text("Edit")
+    $(".modify-bounty-button[data-id='" + id + "']").removeClass('btn-outline-success').addClass('btn-outline-secondary')
+
+    $(".modify-bounty-button[data-id='" + id + "']").unbind()
+    $(".modify-bounty-button[data-id='" + id + "']").click(function () {
       var twitterBountyInstance;
       console.log("Contribute" + id)
-      var amount = $(".modify-bounty-input[data-id='" + id +"']").val();
+      var amount = $(".modify-bounty-input[data-id='" + id + "']").val();
       console.log(amount);
       var amountWei = web3.toWei(amount, 'ether');
       App.contracts.TwitterBounty.deployed().then(function (instance) {
