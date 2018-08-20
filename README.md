@@ -48,7 +48,7 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
 
 View the [guided walkthrough](./walkthrough.md) to see an example of how to test this contract.
 
-Find more developer details [below](#developer-details).
+Find project grading details [below](#project-grading-details).
 
 ## How does it work?
 
@@ -78,7 +78,7 @@ For example, the original bounty creator can make a post like:
 Then using the Twitter Bounty website and smart contracts, they can have others make the same post, and claim rewards for doing so.
 
 
-## Developer Details
+## Project Grading Details
 
 ### Consensys Academy Grading Rubric
 
