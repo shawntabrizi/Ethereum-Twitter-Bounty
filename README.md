@@ -3,6 +3,8 @@
 
 In short, this dApp is a bounty service which allows users to pay and get paid to post specific messages on Twitter.
 
+![Twitter Bounty Screenshot](./twitter-bounty/src/img/screenshot.png)
+
 ## Quickstart
 ### Install prerequisites
 1. Install the Truffle framework:
@@ -159,3 +161,7 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
 
 
     30 passing (40s)
+
+## Known Issues
+
+Check out a list of known issues [here](./walkthrough.md#known-issues).
