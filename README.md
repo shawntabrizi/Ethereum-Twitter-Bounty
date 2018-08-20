@@ -3,7 +3,7 @@
 
 In short, this dApp is a bounty service which allows users to pay and get paid to post specific messages on Twitter.
 
-![Twitter Bounty Screenshot](./twitter-bounty/src/img/screenshot.png)
+![Twitter Bounty Screenshot](./twitter-bounty/src/img/screenshot.PNG)
 
 ## Quickstart
 ### Install prerequisites
