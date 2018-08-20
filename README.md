@@ -29,7 +29,7 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            cd /path/to/ethereum-bridge
            npm install
            node bridge -a 9 -H 127.0.0.1 -p 8545 --dev
-    3. Use one to `migrate` the contracts using Truffle. You might need to run these in PowerShell rather than CMD.
+    3. Use one to `migrate` the contracts using Truffle.
 
            cd /path/to/twitter-bounty
            truffle compile
@@ -41,6 +41,8 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            npm run dev
 
 4. Your browser should automatically open up the Twitter Bounty webpage. To interact, make sure you have [installed and configured MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask).
+
+Find more developer details [below](#developer-details).
 
 ## How does it work?
 
@@ -69,9 +71,40 @@ For example, the original bounty creator can make a post like:
 
 Then using the Twitter Bounty website and smart contracts, they can have others make the same post, and claim rewards for doing so.
 
-## How do I create a bounty?
 
 ## Developer Details
+
+### Consensys Academy Grading Rubric
+
+#### User Interface Requirements
+- [x] Run the app on a dev server locally for testing/grading
+- [x] You should be able to visit a URL and interact with the application
+- [x] App recognizes current account
+- [x] Sign transactions using MetaMask
+- [x] Reflect updates to the contract state
+ 
+#### Test Requirements
+- [x] Write at least 5 tests for each contract with descriptions (see [below](#truffle-tests))
+- [x] Tests are properly structured
+- [x] Tests provide adequate coverage for the contracts
+- [x] All tests pass
+ 
+#### Design Pattern Requirements
+- [x] Implement circuit breaker / emergency stop (Pauseable)
+- [ ] Includes design pattern decisions
+ 
+#### Security Tools / Common Attacks
+- [ ] Includes avoiding common attacks
+
+#### Library
+- [x] Contracts use a library (Open-Zeppelin, Oraclize)
+
+#### Additional Requirements
+- [x] Smart contract code commented using NatSpec
+
+#### Stretch Goals
+- [x] Project uses an Oracle:
+- [x] Project implements an upgradable pattern (Twitter Oracle can be updated)
 
 ### Truffle Tests
     cd /path/to/twitter-bounty
