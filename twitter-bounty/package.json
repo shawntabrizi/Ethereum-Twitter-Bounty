@@ -7,8 +7,9 @@
     "test": "test"
   },
   "scripts": {
-    "dev": "lite-server",
-    "test": "truffle test"
+    "server": "lite-server",
+    "test": "truffle test",
+    "migrate": "truffle compile && truffle migrate --develop --reset"
   },
   "author": "",
   "license": "ISC",

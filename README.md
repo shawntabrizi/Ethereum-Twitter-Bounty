@@ -25,24 +25,26 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
     1. Use one to initialize the Ganache CLI
 
            ganache-cli
-       Make sure to copy your seed phrases for MetaMask.
+       > Make sure to copy your seed phrases for MetaMask.
+
     2. Use one to initialize the `ethereum-bridge`
 
            cd /path/to/ethereum-bridge
            npm install
-           node bridge -a 9 -H 127.0.0.1 -p 8545 --dev
+           npm run bridge
+        > Make sure the Oracle Address Resolver is deployed to `0x6f485c8bf6fc43ea212e93bbf8ce046c7f1cb475`
+
     3. Use one to `migrate` the contracts using Truffle.
 
            cd /path/to/twitter-bounty
-           truffle compile
-           truffle migrate --develop --reset
+           npm run migrate
         
         > Note that `truffle compile` does raise some warnings, but they are only with libraries and imported contracts
 
     4. Finally, use one to start the `lite-server`
 
            cd /path/to/twitter-bounty
-           npm run dev
+           npm run server
 
 4. Your browser should automatically open up the Twitter Bounty webpage. To interact, make sure you have [installed and configured MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask).
 
