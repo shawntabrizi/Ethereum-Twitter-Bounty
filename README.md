@@ -1,5 +1,5 @@
 # Twitter Bounty - A Ethereum Based Twitter Bounty
-### ConsenSys Academy 2018 Developer Program Final Project - Shawn Tabrizi
+### A ConsenSys Academy 2018 Developer Program Final Project - by Shawn Tabrizi
 
 In short, this dApp is a bounty service which allows users to pay and get paid to post specific messages on Twitter.
 
@@ -52,7 +52,7 @@ Find more developer details [below](#developer-details).
 
 ![Twitter Bounty Architecture](./twitter-bounty/src/img/twitter-bounty-architecture.png)
 
-Twitter Bounty is broken up into two Ethereum smart contracts:
+Twitter Bounty is broken up into [two Ethereum smart contracts](./twitter-bounty/contracts):
 
 ### TwitterOracle.sol
 The Twitter Oracle smart contract uses [Oraclize.it's](http://www.oraclize.it/) `oraclize-api` library to retrieve the message text of posts on Twitter via URL. These messages are stored on the Ethereum blockchain within this smart contract, and is publicly accessible by any other smart contract.
@@ -96,26 +96,26 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
  
 #### Design Pattern Requirements
 - [x] Implement circuit breaker / emergency stop (Pauseable)
-- [x] Includes design pattern decisions
+- [x] Includes [design pattern decisions](./design_pattern_desicions.md)
  
 #### Security Tools / Common Attacks
-- [x] Includes avoiding common attacks
+- [x] Includes [avoiding common attacks](./avoiding_common_attacks.md)
 
 #### Library
-- [x] Contracts use a library (Open-Zeppelin, Oraclize)
+- [x] Contracts use a library ([Open-Zeppelin](./twitter-bounty/installed_contracts/zeppelin), [Oraclize](./twitter-bounty/installed_contracts/oraclize-api))
 
 #### Additional Requirements
-- [x] Smart contract code commented using NatSpec
+- [x] Smart contract code commented using [NatSpec](https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format)
 
 #### Stretch Goals
 - [x] Project uses an Oracle
-- [x] Project implements an upgradable pattern
+- [x] Project implements an [upgradable pattern](./design_pattern_desicions.md#upgradability)
 
 ### Truffle Tests
     cd /path/to/twitter-bounty
     truffle test
 
-> Note that these tests are all written in JavaScript due to the fact that these contracts are strongly dependent on the Oracle.
+> Note that [these tests](./twitter-bounty/test) are all written in JavaScript due to the fact that these contracts are strongly dependent on the Oracle.
 
 <break>
 
