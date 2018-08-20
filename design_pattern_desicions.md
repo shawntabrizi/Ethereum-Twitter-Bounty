@@ -1,47 +1,46 @@
 # Design Pattern Decisions
-When developing the Twitter Bounty smart contract, I considered the following design patterns to best
 
 ## Object-Oriented Design
 Twitter Bounty uses two basic objects to simplify the management and access to the contract:
 1)  A `Bounty` object:
 
         struct Bounty {
-            address issuer; // Owner of a bounty
-            uint256 fulfillmentAmount; // The amount that a user gets paid for fulfilling a bounty
-            uint256 balance; // The amount of funds the bounty has available for fulfillment payouts
-            string tweetText; // The specific text used to check for a fulfillment
-            bool bountyOpen; // Bounty state machine, checking that the bounty is open
+            address issuer;             // Owner of a bounty
+            uint256 fulfillmentAmount;  // The amount that a user gets paid for fulfilling a bounty
+            uint256 balance;            // The amount of funds the bounty has available for fulfillment payouts
+            string tweetText;           // The specific text used to check for a fulfillment
+            bool bountyOpen;            // Bounty state machine, checking that the bounty is open
             mapping (bytes32 => bool) tweetsUsed; // Tweets already used to filfill the bounty
         }
 2) A `Fulfillment` object:
 
         struct Fulfillment {
-            uint256 fulfillmentAmount; // The amount the user got paid for fulfilling the bounty
-            address fulfiller; // The user that fulfilled the bounty
-            string tweetId; // The tweet ID used to fulfill the bounty
+            uint256 fulfillmentAmount;  // The amount the user got paid for fulfilling the bounty
+            address fulfiller;          // The user that fulfilled the bounty
+            string tweetId;             // The tweet ID used to fulfill the bounty
         }
 
 ## Fail early and fail loud
 All functions check for valid conditions as early as possible, and thow an exception if they fail.
-* Twitter Bounty has 9 function modifiers with `require` statements
-* Every function has at least some number of relevant modifiers when possible
+* Twitter Bounty has 9 function modifiers with `require` statements which are used at the begining of a function
+* Every function has at least some number of relevant modifiers where applicable
 * Every require statment has an exception description customized for the failed condition
-* Conditions are checked as early as possible in the function to reduce unnecessary code execution
+* Additional conditions are checked as early as possible in the function to reduce unnecessary code execution
 
 ## Contract Lifecycle
-Twitter Bounty takes advantage of Open-Zeppelin libraries to manage the lifecycle of the contract.
+Twitter Bounty takes advantage of [Open-Zeppelin libraries](https://github.com/OpenZeppelin/openzeppelin-solidity/tree/master/contracts/lifecycle) to manage the lifecycle of the contract.
 ### Circuit Breaker
-* The contract is Pauseable, allowing the contract owner to disable all users from accessing all core functions
+* The contract is [Pauseable](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/lifecycle/Pausable.sol), allowing the contract owner to disable all users from accessing all core functions
     > Read only functions are still available and accessible when the contract is paused.
 
 ### Mortal
-* The contract is Destructible, allowing the contract owner to destroy the contract, release stored funds, and clean up data on the blockchain.
+* The contract is [Destructible](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/lifecycle/Destructible.sol), allowing the contract owner to destroy the contract, release stored funds, and clean up data on the blockchain.
 
 ## Restricting Access
 Throughout the Twitter Bounty contract, we ensure that only the certain people with specific roles can call certain functions.
 
 ### Contract Owner
-Twitter Bounty uses the Open-Zeppelin Ownable library. When the contract gets deployed, the contract creator is automatically set as the owner. Only this owner can access the following contract functions:
+Twitter Bounty uses the [Open-Zeppelin Ownable library](https://github.com/OpenZeppelin/openzeppelin-solidity/blob/master/contracts/ownership/Ownable.sol). When the contract gets deployed, the contract creator is automatically set as the owner. Only this owner can access the following contract functions:
 * `setOracle()`: Allowing the owner to change the contract used to retrieve Twitter posts
 * `pause` and `unpause`: Allowing the owner to pause the contract
 * `destroy()` and `destroyAndSend()`: Allowing the owner to destroy the contract
@@ -69,4 +68,3 @@ The Twitter Bounty dApp is built as two seperate contracts:
 2) TwitterOracle.sol (The Twitter oracle for retrieving and storing posts)
 
 Since this contract is dependent on data reterieved from Twitter through an Oracle, any changes to Twitter can cause the contract to break. To prevent this, the Twitter Oracle contract can be redeployed with updated `XPath` logic, and the Twitter Bounty contract can be updated by the owner to point to the new Twitter Oracle. This transition will not break any existing bounties or future fulfillments.
-

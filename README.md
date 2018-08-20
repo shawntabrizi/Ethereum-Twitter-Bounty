@@ -34,6 +34,8 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            cd /path/to/twitter-bounty
            truffle compile
            truffle migrate --develop --reset
+        
+        > Note that `truffle compile` does raise some warnings, but they are only with libraries and imported contracts
 
     4. Finally, use one to start the `lite-server`
 
@@ -41,6 +43,8 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            npm run dev
 
 4. Your browser should automatically open up the Twitter Bounty webpage. To interact, make sure you have [installed and configured MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask).
+
+### Interacting with the contract
 
 Find more developer details [below](#developer-details).
 
@@ -81,7 +85,8 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
 - [x] You should be able to visit a URL and interact with the application
 - [x] App recognizes current account
 - [x] Sign transactions using MetaMask
-- [x] Reflect updates to the contract state
+- [x] Contract state is updated
+- [x] Updates reflected in the UI
  
 #### Test Requirements
 - [x] Write at least 5 tests for each contract with descriptions (see [below](#truffle-tests))
@@ -91,10 +96,10 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
  
 #### Design Pattern Requirements
 - [x] Implement circuit breaker / emergency stop (Pauseable)
-- [ ] Includes design pattern decisions
+- [x] Includes design pattern decisions
  
 #### Security Tools / Common Attacks
-- [ ] Includes avoiding common attacks
+- [x] Includes avoiding common attacks
 
 #### Library
 - [x] Contracts use a library (Open-Zeppelin, Oraclize)
@@ -103,12 +108,14 @@ Then using the Twitter Bounty website and smart contracts, they can have others 
 - [x] Smart contract code commented using NatSpec
 
 #### Stretch Goals
-- [x] Project uses an Oracle:
-- [x] Project implements an upgradable pattern (Twitter Oracle can be updated)
+- [x] Project uses an Oracle
+- [x] Project implements an upgradable pattern
 
 ### Truffle Tests
     cd /path/to/twitter-bounty
     truffle test
+
+> Note that these tests are all written in JavaScript due to the fact that these contracts are strongly dependent on the Oracle.
 
 <break>
 
