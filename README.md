@@ -46,6 +46,8 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
 
 ### Interacting with the contract
 
+View the [guided walkthrough](./walkthrough.md) to see an example of how to test this contract.
+
 Find more developer details [below](#developer-details).
 
 ## How does it work?
