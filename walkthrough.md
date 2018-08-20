@@ -52,6 +52,8 @@
 
     ![Error 1 Image](./twitter-bounty/src/img/Twitter-Bounty-Walkthrough/Error1.PNG)
 
+* Sometimes the Oraclize process succeeds, but the resulting text is empty: `""`. To the contract, an empty string is the same as if the tweet was never oraclized. The page will timeout with an error message same as before.
+
 * The Oraclize XPath parsing will return an array of strings if there is HTML formatting in the tweet. This formatting is handled using `JSON.parse()` in the UX when creating a bounty. But the background contract still validates based on this array; however, if the user uses the exact same text, they should get the same result.
 
     ![Error 2 Image](./twitter-bounty/src/img/Twitter-Bounty-Walkthrough/Error2.PNG)
