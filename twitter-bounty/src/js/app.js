@@ -17,7 +17,15 @@ App = {
     }
     web3 = new Web3(App.web3Provider);
 
-    $("#current-account-address").text(web3.eth.accounts[0]);
+    var account = web3.eth.accounts[0];
+    $("#current-account-address").text(account);
+    var accountInterval = setInterval(function () {
+      if (web3.eth.accounts[0] !== account) {
+        account = web3.eth.accounts[0];
+        $("#current-account-address").text(account);
+        App.showBounties();
+      }
+    }, 100);
 
     return App.initContract();
   },
