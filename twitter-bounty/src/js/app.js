@@ -470,7 +470,6 @@ App = {
     $(".modify-bounty-button[data-id='" + id + "']").click(function () {
       var twitterBountyInstance;
       var amount = $(".modify-bounty-input[data-id='" + id + "']").val();
-      console.log(amount);
       var amountWei = web3.toWei(amount, 'ether');
       App.contracts.TwitterBounty.deployed().then(function (instance) {
         twitterBountyInstance = instance;
@@ -487,13 +486,10 @@ App = {
     $(".modify-bounty-button[data-id='" + id + "']").unbind()
     $(".modify-bounty-button[data-id='" + id + "']").click(function () {
       var twitterBountyInstance;
-      console.log("Contribute" + id)
       var amount = $(".modify-bounty-input[data-id='" + id + "']").val();
-      console.log(amount);
       var amountWei = web3.toWei(amount, 'ether');
       App.contracts.TwitterBounty.deployed().then(function (instance) {
         twitterBountyInstance = instance;
-
         return instance.changePayout(id, amountWei);
       });
     });
