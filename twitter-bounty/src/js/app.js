@@ -73,7 +73,7 @@ App = {
     var twitterBountyInstance;
     App.contracts.TwitterBounty.deployed().then(function (instance) {
       twitterBountyInstance = instance;
-      
+
       // Listen for a bounty to update its payout
       var PayoutChanged = twitterBountyInstance.PayoutChanged();
       PayoutChanged.watch(function (error, result) {
@@ -115,7 +115,9 @@ App = {
       BountyCreated.watch(function (error, result) {
         if (!error) {
           console.log("Adding Bounty #" + result.args._bountyId.toNumber());
-          App.showCreatedBounty(result.args._bountyId.toNumber());
+          App.getNumOfBounties().then(function () {
+            App.showCreatedBounty(result.args._bountyId.toNumber());
+          });
         }
       });
 
@@ -131,7 +133,7 @@ App = {
       return twitterBountyInstance.getBounty(bountyId);
     }).then(function (result) {
       bountyObject = App.convertToBountyObject(result);
-      if (bountyObject.bountyOpen){
+      if (bountyObject.bountyOpen) {
         $(".fulfillment-amount[data-id='" + bountyId + "']").text(web3.fromWei(bountyObject.fulfillmentAmount, 'ether'));
         $(".bounty-balance[data-id='" + bountyId + "']").text(web3.fromWei(bountyObject.balance, 'ether'));
       } else {
@@ -284,7 +286,7 @@ App = {
         if (result == "") {
           $("#tweet-output").collapse('hide');
           return twitterBountyInstance.oraclizeTweet(tweetId);
-        // Otherwise, just show the text we already stored
+          // Otherwise, just show the text we already stored
         } else {
           App.showOracleTweetText(result);
           return result;
@@ -420,7 +422,7 @@ App = {
           $("#fulfill-twitter-bounty").addClass("btn-outline-success").removeClass("btn-outline-danger").removeClass("btn-outline-secondary")
           $("#fulfill-twitter-bounty").prop('disabled', false);
         }
-      // If it won't work, stop the user from submitting the contract call
+        // If it won't work, stop the user from submitting the contract call
       }).catch(function () {
         $("#fulfill-bountyid-message").text("This tweet won't work...")
         $("#fulfill-twitter-bounty").prop('disabled', true);
@@ -457,7 +459,7 @@ App = {
     App.contracts.TwitterBounty.deployed().then(function (instance) {
       twitterBountyInstance = instance;
       // When testing, I was running into out of gas issues with Metamask. I set a pretty high gas amount to prevent that
-      return instance.closeBounty(id, {gas: 60000})
+      return instance.closeBounty(id, { gas: 60000 })
     });
   },
 

@@ -4,10 +4,10 @@ import "installed_contracts/zeppelin/contracts/ownership/Ownable.sol";
 import "installed_contracts/zeppelin/contracts/lifecycle/Pausable.sol";
 import "installed_contracts/zeppelin/contracts/lifecycle/Destructible.sol";
 
-/// @title A skeleton for the Twitter Oracle contract
+/// @title An interface for the Twitter Oracle contract
 /// @author Shawn Tabrizi
 /// @notice The Twitter Oracle contract allows users to retrieve and store twitter post text onto the blockchain
-contract TwitterOracle {
+interface TwitterOracle {
     /// @notice Retrieve the tweet text for a given post stored in the contract
     /// @dev Returned string may come back in an array syntax and will need to be parsed by the front-end
     /// @param _postId The post id you want to retrieve text for. Expecting "<user>/status/<id>".
