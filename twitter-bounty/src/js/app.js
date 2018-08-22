@@ -2,6 +2,7 @@ App = {
   web3Provider: null,
   contracts: {},
   numOfBounties: 0,
+  latestBlock: 0,
 
   init: function () {
     return App.initWeb3();
@@ -77,6 +78,12 @@ App = {
   },
 
   eventListeners: function () {
+    web3.eth.getBlockNumber(function (error, result) {
+      if (!error) {
+        App.latestBlock = result;
+      }
+    });
+
     // Add event listeners to update the UX when different contract events occur
     var twitterBountyInstance;
     App.contracts.TwitterBounty.deployed().then(function (instance) {
@@ -119,13 +126,16 @@ App = {
       });
 
       // Listen for a bounty to be created and show it in the UX
-      var BountyCreated = twitterBountyInstance.BountyCreated();
+      // Here we have to check to not grab events from the current block
+      var BountyCreated = twitterBountyInstance.BountyCreated({ fromBlock: App.latestBlock });
       BountyCreated.watch(function (error, result) {
         if (!error) {
-          console.log("Adding Bounty #" + result.args._bountyId.toNumber());
-          App.getNumOfBounties().then(function () {
-            App.showCreatedBounty(result.args._bountyId.toNumber());
-          });
+          if (result.blockNumber != App.latestBlock) {
+            console.log("Adding Bounty #" + result.args._bountyId.toNumber());
+            App.getNumOfBounties().then(function () {
+              App.showCreatedBounty(result.args._bountyId.toNumber());
+            });
+          }
         }
       });
 
