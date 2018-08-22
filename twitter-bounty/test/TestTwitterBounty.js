@@ -140,7 +140,7 @@ contract('TwitterBounty.sol', function (accounts) {
                 let result = await instance.fulfillBounty.call(0, postUrl1);
                 assert.fail('Fulfilment of bounty should have thrown an exception!');
             } catch (e) {
-                assert.isTrue(e.message.startsWith(`${PREFIX}${expectedError} ${expectedMessage}`), `Expected ${expectedError} but got ${e.message} instead!`);
+                assert.isTrue(e.message.startsWith(`${PREFIX}${expectedError}`), `Expected ${expectedError} but got ${e.message} instead!`);
             }
         })
 
@@ -153,7 +153,7 @@ contract('TwitterBounty.sol', function (accounts) {
                 await instance.fulfillBounty.call(0, postUrl3);
                 assert.fail('Fulfilment of bounty should have thrown an exception!');
             } catch (e) {
-                assert.isTrue(e.message.startsWith(`${PREFIX}${expectedError} ${expectedMessage}`), `Expected ${expectedError} but got ${e.message} instead!`);
+                assert.isTrue(e.message.startsWith(`${PREFIX}${expectedError}`), `Expected ${expectedError} but got ${e.message} instead!`);
             }
         })
 
@@ -183,7 +183,7 @@ contract('TwitterBounty.sol', function (accounts) {
                 await instance.closeBounty(0, {from: accounts[3]});
                 assert.fail('Trying to edit the bounty should have thrown an exception!');
             } catch (e) {
-                assert.isTrue(e.message.startsWith(`${PREFIX}${expectedError} ${expectedMessage}`), `Expected ${expectedError} but got ${e.message} instead!`);
+                assert.isTrue(e.message.startsWith(`${PREFIX}${expectedError}`), `Expected ${expectedError} but got ${e.message} instead!`);
             }
         })
 
