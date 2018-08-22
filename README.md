@@ -31,7 +31,7 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
 
            cd /path/to/ethereum-bridge
            npm install
-           npm run bridge
+           node bridge -a 9 -H 127.0.0.1 -p 8545 --dev
         > Make sure the Oracle Address Resolver is deployed to `0x6f485c8bf6fc43ea212e93bbf8ce046c7f1cb475`
 
     3. Use one to `migrate` the contracts using Truffle.
