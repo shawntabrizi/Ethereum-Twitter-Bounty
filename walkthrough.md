@@ -42,7 +42,7 @@
 
 10) Now let's see what would happen if the fulfillment would fail. Oraclize this tweet: `https://twitter.com/deturb/status/1026354801381203968`
 
-    You should see that the website tells you that "This tweet won't work...", and the "Claim" button is disabled.
+    If you try to fulfill the bounty using this tweet, you should see that the website tells you that "This tweet won't work...", and the "Claim" button is disabled.
 
     ![Step 10 Image](./twitter-bounty/src/img/Twitter-Bounty-Walkthrough/Slide10.PNG)
 
