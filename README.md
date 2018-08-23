@@ -13,6 +13,7 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
 2. Install the Ganache CLI:
 
        npm install -g ganache-cli
+3. Install the [MetaMask plugin](https://metamask.io/) for your web browser
 
 ### Running Twitter Bounty Locally
 1. Clone this repository
@@ -20,12 +21,12 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
 
        git submodule init
        git submodule update
-3. You will need to open 4 seperate console windows:
+3. You will need to open 4 separate console windows to set up the environment. Some of these windows may need admin or sudo privileges:
 
     1. Use one to initialize the Ganache CLI
 
            ganache-cli
-       > Make sure to save your 12 word mnemonic and use it when you initialize MetaMask.
+       > Make sure to save your [12-word mnemonic](./twitter-bounty/src/img/ganache-cli-mnemonic.PNG) and use it when you initialize MetaMask in Step 4 below.
        
     2. Use one to initialize the `ethereum-bridge`
 
@@ -46,7 +47,12 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            cd /path/to/twitter-bounty
            npm run server
 
-4. Your browser should automatically open up the Twitter Bounty webpage. To interact, make sure you have [installed and configured MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask) using the seed phrase you saved from `ganache-cli`.
+        > Your browser should automatically open up the Twitter Bounty webpage.
+
+4. Configure MetaMask to use the 12-word mnemonic you saved earlier by clicking "Import using account seed phrase"
+
+5. Change your MetaMask network to use `Localhost 8545`, and then you should be good to go!
+    > You can confirm your browser has been set up correctly if you see a balance of ~ 100 ETH in MetaMask
 
 ### Interacting with the contract
 
@@ -61,23 +67,23 @@ Find project grading details [below](#project-grading-details).
 Twitter Bounty is broken up into [two Ethereum smart contracts](./twitter-bounty/contracts):
 
 ### TwitterOracle.sol
-The Twitter Oracle smart contract uses [Oraclize.it's](http://www.oraclize.it/) `oraclize-api` library to retrieve the message text of posts on Twitter via URL. These messages are stored on the Ethereum blockchain within this smart contract, and is publicly accessible by any other smart contract.
+The Twitter Oracle smart contract uses [Oraclize.it's](http://www.oraclize.it/) `oraclize-api` library to retrieve the message text of posts on Twitter via URL. These messages are stored on the Ethereum blockchain within this smart contract and is publicly accessible by any other smart contract.
 
 Any user or contract can call this contract to store a new Twitter message. Storing the data from Oraclize callback requires this contract also has balance of Ether to function, and anyone can contribute ether to keep the oracle running.
 
 ### TwitterBounty.sol
 The main Twitter Bounty smart contract is similar to [Bounties Network's](https://github.com/Bounties-Network/StandardBounties) `StandardBounties.sol`. Using the data on the Twitter Oracle smart contract, users are able to open new bounties or claim fulfillment rewards on existing ones.
 
-Completing a bounty requires that a user prove that a new tweet that has not been used in the past contains the same text as the original Twitter post for the bounty. Because this proof can be done programatically, bounty verification and reward resolution can happen all at once, and without the need of the bounty creator to verify or accept fulfillments.
+Completing a bounty requires that a user prove that a new tweet that has not been used in the past contains the same text as the original Twitter post for the bounty. Because this proof can be done programmatically, bounty verification and reward resolution can happen all at once, and without the need of the bounty creator to verify or accept fulfillments.
 
-Bounty creators have control over their bounties, and can edit the fulfillment rewards or close open bounties. Anyone can contribute to existing bounties to continue to fund them and encourage others to keep fulfilling the bounty.
+Bounty creators have control over their bounties and can edit the fulfillment rewards or close open bounties. Anyone can contribute to existing bounties to continue to fund them and encourage others to keep fulfilling the bounty.
 
 ## How is this useful?
 Twitter Bounty enables a decentralized and simple way for people to advertise or spread messages in an organic way. Imagine that you just released a new product, and you want others to share your product. Rather than paying for an ad, you can harness a community of Twitter users to share your product with their networks. For their efforts, you can automatically pay them using this bounty system.
 
 For example, the original bounty creator can make a post like:
 
-> Hey have you heard about @TwitterBountyETH?
+> Hey, have you heard about @TwitterBountyETH?
 
 Then using the Twitter Bounty website and smart contracts, they can have others make the same post, and claim rewards for doing so.
 
