@@ -25,8 +25,8 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
     1. Use one to initialize the Ganache CLI
 
            ganache-cli
-       > Make sure to copy your seed phrases for MetaMask.
-
+       > Make sure to save your 12 word mnemonic and use it when you initialize MetaMask.
+       
     2. Use one to initialize the `ethereum-bridge`
 
            cd /path/to/ethereum-bridge
@@ -46,7 +46,7 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
            cd /path/to/twitter-bounty
            npm run server
 
-4. Your browser should automatically open up the Twitter Bounty webpage. To interact, make sure you have [installed and configured MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask).
+4. Your browser should automatically open up the Twitter Bounty webpage. To interact, make sure you have [installed and configured MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask) using the seed phrase you saved from `ganache-cli`.
 
 ### Interacting with the contract
 
