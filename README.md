@@ -13,7 +13,12 @@ In short, this dApp is a bounty service which allows users to pay and get paid t
 2. Install the Ganache CLI:
 
        npm install -g ganache-cli
-3. Install the [MetaMask plugin](https://metamask.io/) for your web browser
+
+3. Install Lite Server
+       
+       npm install -g lite-server
+
+4. Install the [MetaMask plugin](https://metamask.io/) for your web browser
 
 ### Running Twitter Bounty Locally
 1. Clone this repository
