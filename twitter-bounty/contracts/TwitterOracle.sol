@@ -112,7 +112,7 @@ contract TwitterOracle is Ownable, Pausable, Destructible, usingOraclize {
             // Using XPath to to fetch the right element in the JSON response
             string memory query = string(abi.encodePacked("html(https://twitter.com/", _postId, ").xpath(//div[contains(@class, 'permalink-tweet-container')]//p[contains(@class, 'tweet-text')]//text())"));
 
-            bytes32 queryId = oraclize_query("URL", query);
+            bytes32 queryId = oraclize_query("URL", query, 6721975);
             queryToPost[queryId] = _postId;
         }
     }
